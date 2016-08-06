@@ -176,7 +176,7 @@ function shadowsocks_SuspendAccount($params) {
 		if ($select == "") {
 			$result = "Can't find.";
 		} else {
-			if (mysql_query("UPDATE user SET  passwd='".$password."' WHERE pid='".$params['serviceid']."'",$mysql)) {
+			if (mysql_query("UPDATE user SET  enable='0' WHERE pid='".$params['serviceid']."'",$mysql)) {
 				$result = 'success';
 			} else {
 				$result = "Can't suspend user.".mysql_error();
@@ -204,7 +204,7 @@ function shadowsocks_UnSuspendAccount($params) {
 		if ($select == "") {
 			$result = "Can't find.";
 		} else {
-			if (mysql_query("UPDATE user SET passwd='".$password."' WHERE pid='".$params['serviceid']."'",$mysql)) {
+			if (mysql_query("UPDATE user SET enable='1' WHERE pid='".$params['serviceid']."'",$mysql)) {
 				$result =  'success';
 			} else {
 	        	$result = "Could not Suspend user:".mysql_error();
@@ -324,7 +324,7 @@ function shadowsocks_ClientArea($params) {
 		// $QUeryPort = mysql_fetch_array($QueryPort);
 		$Port = $Query['port'];
 		//Free
-		$Free = $traffic  - $Usage;
+		$Free = $params['configoption5']  - $Usage;
 		//Percentage
 		$password = $Query['passwd'];
 
@@ -339,14 +339,14 @@ $urlt = base64_encode($urlt);
 $orginurlt = base64_encode($orginurlt);
 $url = "ss://{$urlt}";
 $orginurl = "ss://{$orginurlt}";
-$tg = " https://www.23333.23333/1.php?data=".$url;
-$tgo = " https://www.2333.2333/1.php?data=".$orginurl;
-    if (isset($params['configoptions']['traffic'])) {
+$tg = " https://www.littlebusters.top/qrcode.php?type=SSR&data=".$url;
+$tgo = " https://www.littlebusters.top/qrcode.php?type=SS原版&data=".$orginurl;
+    if (isset($params['configoption5'])) {
     	$html = "
 				<table class=\"table table-bordered table-hover tc-table\">
 					<tbody>
 						<tr>
-							<td>流量限制</td><td>{$traffic} GB</td>
+							<td>流量限制</td><td>{$params['configoption5']} GB</td>
 						</tr>
 						<tr>
 							<td>加密方式</td><td>{$params['configoption2']}</td>
@@ -373,15 +373,14 @@ $tgo = " https://www.2333.2333/1.php?data=".$orginurl;
 	                       <td>协议</td><td>{$params['configoption7']}</td>
 					    </tr>
 						<tr>
-						    <td>已用流量 MBytes</td><td>{$Usage} MBytes</td>
+						    <td>已用流量 GBytes</td><td>{$Usage} GBytes</td>
 						</tr>
 						<tr>
-							<td><b>二维码</b></td><td><a href=\"{$tgo}\" target=\"_blank\">SS原版&nbsp </a><a href=\"{$tg}\" target=\"_blank\">&nbspSSR</a></td>
+							<td><b>二维码</b></td><td><a href=\"{$tgo}\" target=\"_blank\">SS原版【安卓/路由器】&nbsp </a><a href=\"{$tg}\" target=\"_blank\">&nbspSSR【电脑/路由器】</a></td>
 						</tr>
 						
 					</tbody>
 				</table>
-				
     	";
     } else {
     	$html = "
@@ -409,10 +408,10 @@ $tgo = " https://www.2333.2333/1.php?data=".$orginurl;
 	                       <td>协议</td><td>{$params['configoption7']}</td>
 					    </tr>
 						<tr>
-							<td>已经使用 </td><td>{$Usage} MBytes</td>
+							<td>已经使用 </td><td>{$Usage} GBytes</td>
 						</tr>
 						<tr>
-							<td><b>二维码</b></td><td><a href=\"{$tgo}\" target=\"_blank\">SS原版&nbsp </a><a href=\"{$tg}\" target=\"_blank\">&nbspSSR</a></td>
+							<td><b>二维码</b></td><td><a href=\"{$tgo}\" target=\"_blank\">SS原版【安卓/路由器】&nbsp </a><a href=\"{$tg}\" target=\"_blank\">&nbspSSR【电脑/路由器】</a></td>
 						</tr>
 						
 					</tbody>
