@@ -52,12 +52,25 @@ function shadowsocks_CreateNewPort($params) {
 		$select = mysql_fetch_array($select);
 
 		if (!$select == "") {
-			$get_last_port = mysql_query("SELECT port FROM user order by port desc limit 1",$mysql);
+			$point=$start;
+			while($point<=$end){
+				$get_port = mysql_query("SELECT port FROM user where port =".$point."",$mysql);
+				$get_port = mysql_fetch_array($get_port);
+				if($get_port==""){
+					$result=$point;
+					break;
+					}
+					$point = $point + 1;
+				}
+				if ($result > $end) {
+				$result = "Port exceeds the maximum value.";
+			}
+			/*$get_last_port = mysql_query("SELECT port FROM user order by port desc limit 1",$mysql);
 			$get_last_port = mysql_fetch_array($get_last_port);
 			$result = $get_last_port['port']+1;
 			if ($result > $end) {
 				$result = "Port exceeds the maximum value.";
-			}
+			}*/
 		} else {
 			$result = $start;
 		}
